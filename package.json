@@ -1,11 +1,10 @@
 {
   "name": "news",
   "version": "0.1.0",
-  "homepage": "https://github.com/Anjaneyakumar18/News-app",
+  "homepage": "https://github.com/Anjaneyakumar18/newsapp",
   "proxy": "https://newsapi.org",
   "predeploy": "npm run build",
-"deploy": "gh-pages -d build",
-
+  "deploy": "gh-pages -d build",
   "private": true,
   "dependencies": {
     "@testing-library/dom": "^10.4.1",
@@ -45,5 +44,4 @@
   "devDependencies": {
     "gh-pages": "^6.3.0"
   }
-  
 }
