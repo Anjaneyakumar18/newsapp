@@ -1,6 +1,11 @@
 {
   "name": "news",
   "version": "0.1.0",
+  "homepage": "https://github.com/Anjaneyakumar18/News-app",
+  "proxy": "https://newsapi.org",
+  "predeploy": "npm run build",
+"deploy": "gh-pages -d build",
+
   "private": true,
   "dependencies": {
     "@testing-library/dom": "^10.4.1",
@@ -9,6 +14,7 @@
     "@testing-library/user-event": "^13.5.0",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
+    "react-router-dom": "^7.8.1",
     "react-scripts": "5.0.1",
     "web-vitals": "^2.1.4"
   },
@@ -35,5 +41,9 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "gh-pages": "^6.3.0"
   }
+  
 }
