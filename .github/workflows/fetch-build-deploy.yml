@@ -1,0 +1,81 @@
+mkdir -p .github/workflows
+cat > .github/workflows/fetch-build-deploy.yml <<'YAML'
+name: Fetch News, Build, and Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+  schedule:
+    - cron: '0 * * * *'
+
+jobs:
+  fetch-build-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Create news folder
+        run: mkdir -p public/news
+
+      - name: Fetch Apple news (everything)
+        env:
+          NEWS_API_KEY: ${{ secrets.NEWS_API_KEY }}
+        run: |
+          echo "Fetching Apple news..."
+          curl -s "https://newsapi.org/v2/everything?q=apple&from=2025-08-19&to=2025-08-19&sortBy=popularity&apiKey=${NEWS_API_KEY}" > public/news/apple.json || echo '{"status":"error","message":"fetch-failed"}' > public/news/apple.json
+          echo "Apple saved: $(wc -c public/news/apple.json) bytes"
+
+      - name: Fetch Tesla news (everything)
+        env:
+          NEWS_API_KEY: ${{ secrets.NEWS_API_KEY }}
+        run: |
+          echo "Fetching Tesla news..."
+          curl -s "https://newsapi.org/v2/everything?q=tesla&from=2025-07-20&sortBy=publishedAt&apiKey=${NEWS_API_KEY}" > public/news/tesla.json || echo '{"status":"error","message":"fetch-failed"}' > public/news/tesla.json
+          echo "Tesla saved: $(wc -c public/news/tesla.json) bytes"
+
+      - name: Fetch Business top-headlines (US)
+        env:
+          NEWS_API_KEY: ${{ secrets.NEWS_API_KEY }}
+        run: |
+          echo "Fetching Business (US) top-headlines..."
+          curl -s "https://newsapi.org/v2/top-headlines?country=us&category=business&apiKey=${NEWS_API_KEY}" > public/news/business.json || echo '{"status":"error","message":"fetch-failed"}' > public/news/business.json
+          echo "Business saved: $(wc -c public/news/business.json) bytes"
+
+      - name: Fetch TechCrunch top-headlines
+        env:
+          NEWS_API_KEY: ${{ secrets.NEWS_API_KEY }}
+        run: |
+          echo "Fetching TechCrunch..."
+          curl -s "https://newsapi.org/v2/top-headlines?sources=techcrunch&apiKey=${NEWS_API_KEY}" > public/news/techcrunch.json || echo '{"status":"error","message":"fetch-failed"}' > public/news/techcrunch.json
+          echo "TechCrunch saved: $(wc -c public/news/techcrunch.json) bytes"
+
+      - name: Fetch Wall Street Journal (wsj.com)
+        env:
+          NEWS_API_KEY: ${{ secrets.NEWS_API_KEY }}
+        run: |
+          echo "Fetching WSJ..."
+          curl -s "https://newsapi.org/v2/everything?domains=wsj.com&apiKey=${NEWS_API_KEY}" > public/news/wsj.json || echo '{"status":"error","message":"fetch-failed"}' > public/news/wsj.json
+          echo "WSJ saved: $(wc -c public/news/wsj.json) bytes"
+
+      - name: Build React app
+        run: npm run build
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./build
+YAML
