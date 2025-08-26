@@ -14,6 +14,12 @@ export default function Business() {
       })
       .catch((err) => console.error("Error fetching business news:", err));
   }, []);
+    const toDate = new Date();
+const fromDate = new Date();
+fromDate.setMonth(fromDate.getMonth() - 1);
+
+const formattedFrom = fromDate.toISOString().split("T")[0];
+const formattedTo = toDate.toISOString().split("T")[0];
 
   return (
     <div className="business-container">

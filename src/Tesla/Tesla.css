@@ -1,8 +1,8 @@
 :root{
   --bg: #0f1724;
   --card-bg: #0b1220;
-  --muted: #9aa6b2;
-  --text: #e6eef6;
+  --muted: #202223;
+  --text: #071a2e;
   --accent: #38bdf8;
   --accent-2: #7c3aed;
   --glass: rgba(255,255,255,0.03);
@@ -112,7 +112,7 @@
 
 /* Description text */
 .article-desc {
-  color: #cbd7e2;
+  color: #081c2e;
   font-size: 0.98rem;
   margin: 6px 0 0;
   line-height: 1.45;
@@ -166,4 +166,7 @@
 .article-card:focus-within {
   outline: 3px solid rgba(56,189,248,0.08);
   outline-offset: 6px;
+}
+#applehead{
+  margin-bottom: 20px;
 }

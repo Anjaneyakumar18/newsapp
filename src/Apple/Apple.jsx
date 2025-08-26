@@ -5,9 +5,15 @@ export default function Apple() {
   const [articles, setArticles] = useState([]);
   const [loading, setLoading] = useState(true);
   const APIKEY=apikey;
+    const toDate = new Date();
+const fromDate = new Date();
+fromDate.setMonth(fromDate.getMonth() - 1);
+
+const formattedFrom = fromDate.toISOString().split("T")[0];
+const formattedTo = toDate.toISOString().split("T")[0];
   useEffect(() => {
     fetch(
-      `https://newsapi.org/v2/everything?q=apple&from=2025-08-19&to=2025-08-19&sortBy=popularity&apiKey=${APIKEY}`
+      `https://newsapi.org/v2/everything?q=apple&from=${formattedFrom}&to=${formattedTo}&sortBy=popularity&apiKey=${APIKEY}`
     )
       .then((res) => res.json())
       .then((data) => {

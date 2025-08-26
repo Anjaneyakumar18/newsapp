@@ -5,32 +5,173 @@
   --accent-2: #7c3aed;
   --text: #e6eef6;
   --glass: rgba(255,255,255,0.03);
+  --drawer-width: 320px;
+  --nav-height: 64px;
 }
 
-/* reset */
+/* reset (keeps yours) */
 * { box-sizing: border-box; margin: 0; padding: 0; }
 html, body, #root { height: 100%; font-family: Inter, system-ui, sans-serif; background: var(--bg); color: var(--text); }
 
-/* ---------- Mobile nav ---------- */
-.mobile-nav {
-  display: block;
-  padding: 12px;
-  background: var(--glass);
-  border-bottom: 1px solid rgba(255,255,255,0.05);
+/* ---------------- mobile topbar ---------------- */
+.mobile-topbar {
+  display: none; /* visible on small screens via media query */
+  height: 56px;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 12px;
+  position: sticky;
+  top: 0;
+  z-index: 220;
+  background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.00));
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  backdrop-filter: blur(6px);
 }
 
-.mobile-nav select {
-  width: 100%;
-  padding: 10px 14px;
-  border-radius: 8px;
-  border: 1px solid rgba(255,255,255,0.08);
-  background: var(--glass);
+/* hamburger button */
+.hamburger-btn {
+  width: 44px;
+  height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.04);
   color: var(--text);
-  font-weight: 600;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 18px;
+  padding: 6px;
+  transition: transform .12s ease, box-shadow .12s ease;
+}
+.hamburger-btn:active { transform: translateY(1px); }
+.hamburger-btn:focus { outline: 3px solid rgba(56,189,248,0.14); outline-offset: 2px; }
+
+/* title in topbar */
+.mobile-topbar-title {
+  flex: 1;
+  text-align: left;
+  color: var(--text);
+  font-weight: 700;
+  font-size: 1.02rem;
   cursor: pointer;
 }
 
-/* ---------- Desktop nav ---------- */
+/* spacer for balancing on the right */
+.mobile-topbar-spacer { width: 44px; height: 44px; }
+
+/* ---------------- overlay ---------------- */
+.drawer-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(2,6,23,0.55);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .24s ease;
+  z-index: 210;
+}
+.drawer-overlay.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* ---------------- side drawer ---------------- */
+.side-drawer {
+  position: fixed;
+  top: 0;
+  left: calc(-1 * var(--drawer-width));
+  width: var(--drawer-width);
+  max-width: 92vw;
+  height: 100vh;
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+  color: var(--text);
+  box-shadow: 14px 0 48px rgba(2,6,23,0.6);
+  z-index: 230;
+  transition: left .28s cubic-bezier(.2,.9,.2,1), transform .28s ease;
+  display: flex;
+  flex-direction: column;
+  padding: 18px;
+  -webkit-overflow-scrolling: touch;
+  will-change: left;
+  border-right: 1px solid rgba(255,255,255,0.03);
+}
+.side-drawer.open {
+  left: 0;
+}
+
+/* drawer header */
+.drawer-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 8px;
+  color: var(--text);
+  font-weight: 700;
+}
+.drawer-close {
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.04);
+  color: var(--text);
+  font-size: 20px;
+  cursor: pointer;
+  padding: 6px 10px;
+  border-radius: 8px;
+  line-height: 1;
+}
+.drawer-close:focus { outline: 3px solid rgba(124,58,237,0.12); outline-offset: 2px; }
+
+/* nav inside drawer */
+.drawer-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 8px;
+  flex: 1;
+  overflow: auto;
+  padding-right: 6px;
+}
+
+/* drawer link base */
+.drawer-link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 14px;
+  color: var(--muted);
+  text-decoration: none;
+  border-radius: 10px;
+  transition: background .14s ease, color .14s ease, transform .12s ease;
+}
+.drawer-link:hover {
+  background: rgba(56,189,248,0.03);
+  color: var(--text);
+  transform: translateY(-2px);
+}
+.drawer-link:focus { outline: 3px solid rgba(56,189,248,0.10); outline-offset: 3px; }
+
+/* active link */
+.drawer-link.active {
+  background: linear-gradient(90deg, rgba(56,189,248,0.12), rgba(124,58,237,0.08));
+  color: var(--text);
+  box-shadow: 0 8px 20px rgba(56,189,248,0.04);
+}
+
+/* small parts inside link */
+.drawer-link-label { font-weight: 700; }
+.drawer-link-chevron { color: var(--muted); }
+
+/* drawer footer */
+.drawer-footer {
+  margin-top: 12px;
+  color: var(--muted);
+  font-size: 12px;
+  padding-top: 12px;
+  border-top: 1px dashed rgba(255,255,255,0.03);
+}
+
+/* ---------------- desktop nav (kept consistent with your base) ---------------- */
 .navbar-container {
   display: flex;
   flex-direction: column;
@@ -58,31 +199,52 @@ html, body, #root { height: 100%; font-family: Inter, system-ui, sans-serif; bac
   padding: 8px 14px;
   border-radius: 6px;
   font-weight: 600;
-  transition: 0.2s;
+  transition: transform .12s ease, background .12s ease, color .12s ease;
 }
 
 .nav-item:hover {
   color: var(--text);
   background: rgba(255,255,255,0.06);
 }
-
 .nav-item.active,
 .nav-item[aria-current="page"] {
   color: var(--text);
   background: linear-gradient(90deg, rgba(56,189,248,0.15), rgba(124,58,237,0.12));
 }
 
+/* page content area */
 .page-content {
   flex: 1;
   width: 100%;
   padding: 24px;
+  box-sizing: border-box;
+  transition: padding .18s ease;
 }
 
+/* when drawer is open, ensure page content has subtle dim (handled by overlay) */
+
+/* ---------------- responsive rules ---------------- */
 @media (max-width: 880px) {
   .navbar { display: none; }
-  .mobile-nav { display: block; }
+  .mobile-topbar { display: flex; }
+  /* hide old mobile select if still present */
+  .mobile-nav { display: none !important; }
+  .mobile-bottom-nav { display: none !important; }
+
+  /* reduce drawer width on very small screens */
+  .side-drawer { width: min(var(--drawer-width), 92vw); left: calc(-1 * min(var(--drawer-width), 92vw)); }
+  .side-drawer.open { left: 0; }
 }
 
-@media (min-width: 881px) {
-  .mobile-nav { display: none; }
+@media (prefers-reduced-motion: reduce) {
+  .side-drawer, .drawer-overlay, .drawer-link, .hamburger-btn { transition: none !important; transform: none !important; }
+}
+
+/* accessibility helpers */
+.sr-only {
+  position: absolute !important;
+  height: 1px; width: 1px;
+  overflow: hidden;
+  clip: rect(1px, 1px, 1px, 1px);
+  white-space: nowrap;
 }
